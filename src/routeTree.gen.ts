@@ -9,38 +9,152 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as InicioRouteImport } from './routes/inicio'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppMiCarreraRouteImport } from './routes/app.mi-carrera'
+import { Route as AppInstitucionalRouteImport } from './routes/app.institucional'
+import { Route as AppInfoRouteImport } from './routes/app.info'
+import { Route as AppHerramientasRouteImport } from './routes/app.herramientas'
+import { Route as AppCarrerasRouteImport } from './routes/app.carreras'
 
+const InicioRoute = InicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMiCarreraRoute = AppMiCarreraRouteImport.update({
+  id: '/mi-carrera',
+  path: '/mi-carrera',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInstitucionalRoute = AppInstitucionalRouteImport.update({
+  id: '/institucional',
+  path: '/institucional',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInfoRoute = AppInfoRouteImport.update({
+  id: '/info',
+  path: '/info',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHerramientasRoute = AppHerramientasRouteImport.update({
+  id: '/herramientas',
+  path: '/herramientas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCarrerasRoute = AppCarrerasRouteImport.update({
+  id: '/carreras',
+  path: '/carreras',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/inicio': typeof InicioRoute
+  '/app/carreras': typeof AppCarrerasRoute
+  '/app/herramientas': typeof AppHerramientasRoute
+  '/app/info': typeof AppInfoRoute
+  '/app/institucional': typeof AppInstitucionalRoute
+  '/app/mi-carrera': typeof AppMiCarreraRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/inicio': typeof InicioRoute
+  '/app/carreras': typeof AppCarrerasRoute
+  '/app/herramientas': typeof AppHerramientasRoute
+  '/app/info': typeof AppInfoRoute
+  '/app/institucional': typeof AppInstitucionalRoute
+  '/app/mi-carrera': typeof AppMiCarreraRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/inicio': typeof InicioRoute
+  '/app/carreras': typeof AppCarrerasRoute
+  '/app/herramientas': typeof AppHerramientasRoute
+  '/app/info': typeof AppInfoRoute
+  '/app/institucional': typeof AppInstitucionalRoute
+  '/app/mi-carrera': typeof AppMiCarreraRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/inicio'
+    | '/app/carreras'
+    | '/app/herramientas'
+    | '/app/info'
+    | '/app/institucional'
+    | '/app/mi-carrera'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/inicio'
+    | '/app/carreras'
+    | '/app/herramientas'
+    | '/app/info'
+    | '/app/institucional'
+    | '/app/mi-carrera'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/inicio'
+    | '/app/carreras'
+    | '/app/herramientas'
+    | '/app/info'
+    | '/app/institucional'
+    | '/app/mi-carrera'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  InicioRoute: typeof InicioRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/inicio': {
+      id: '/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof InicioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +162,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/mi-carrera': {
+      id: '/app/mi-carrera'
+      path: '/mi-carrera'
+      fullPath: '/app/mi-carrera'
+      preLoaderRoute: typeof AppMiCarreraRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/institucional': {
+      id: '/app/institucional'
+      path: '/institucional'
+      fullPath: '/app/institucional'
+      preLoaderRoute: typeof AppInstitucionalRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/info': {
+      id: '/app/info'
+      path: '/info'
+      fullPath: '/app/info'
+      preLoaderRoute: typeof AppInfoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/herramientas': {
+      id: '/app/herramientas'
+      path: '/herramientas'
+      fullPath: '/app/herramientas'
+      preLoaderRoute: typeof AppHerramientasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/carreras': {
+      id: '/app/carreras'
+      path: '/carreras'
+      fullPath: '/app/carreras'
+      preLoaderRoute: typeof AppCarrerasRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppCarrerasRoute: typeof AppCarrerasRoute
+  AppHerramientasRoute: typeof AppHerramientasRoute
+  AppInfoRoute: typeof AppInfoRoute
+  AppInstitucionalRoute: typeof AppInstitucionalRoute
+  AppMiCarreraRoute: typeof AppMiCarreraRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppCarrerasRoute: AppCarrerasRoute,
+  AppHerramientasRoute: AppHerramientasRoute,
+  AppInfoRoute: AppInfoRoute,
+  AppInstitucionalRoute: AppInstitucionalRoute,
+  AppMiCarreraRoute: AppMiCarreraRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  InicioRoute: InicioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
