@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { getSession } from "@/lib/auth";
+import { useEffect } from "react";
+import { useSession } from "@/lib/auth";
 
 export const Route = createFileRoute("/inicio")({
   component: Inicio,
@@ -8,14 +8,13 @@ export const Route = createFileRoute("/inicio")({
 
 function Inicio() {
   const navigate = useNavigate();
-  const [ready, setReady] = useState(false);
+  const { user, loading } = useSession();
 
   useEffect(() => {
-    if (!getSession()) navigate({ to: "/" });
-    else setReady(true);
-  }, [navigate]);
+    if (!loading && !user) navigate({ to: "/" });
+  }, [loading, user, navigate]);
 
-  if (!ready) return <div style={{ background: "#0000ff", minHeight: "100vh" }} />;
+  if (loading || !user) return <div style={{ background: "#0000ff", minHeight: "100vh" }} />;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10 text-white" style={{ background: "#0000ff" }}>
