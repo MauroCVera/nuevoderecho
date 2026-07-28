@@ -18,6 +18,7 @@ import { Route as AppInstitucionalRouteImport } from './routes/app.institucional
 import { Route as AppInfoRouteImport } from './routes/app.info'
 import { Route as AppHerramientasRouteImport } from './routes/app.herramientas'
 import { Route as AppCarrerasRouteImport } from './routes/app.carreras'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
 
 const InicioRoute = InicioRouteImport.update({
   id: '/inicio',
@@ -64,11 +65,17 @@ const AppCarrerasRoute = AppCarrerasRouteImport.update({
   path: '/carreras',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/inicio': typeof InicioRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/carreras': typeof AppCarrerasRoute
   '/app/herramientas': typeof AppHerramientasRoute
   '/app/info': typeof AppInfoRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/inicio': typeof InicioRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/carreras': typeof AppCarrerasRoute
   '/app/herramientas': typeof AppHerramientasRoute
   '/app/info': typeof AppInfoRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/inicio': typeof InicioRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/carreras': typeof AppCarrerasRoute
   '/app/herramientas': typeof AppHerramientasRoute
   '/app/info': typeof AppInfoRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/inicio'
+    | '/app/admin'
     | '/app/carreras'
     | '/app/herramientas'
     | '/app/info'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/inicio'
+    | '/app/admin'
     | '/app/carreras'
     | '/app/herramientas'
     | '/app/info'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/inicio'
+    | '/app/admin'
     | '/app/carreras'
     | '/app/herramientas'
     | '/app/info'
@@ -204,10 +216,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCarrerasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppCarrerasRoute: typeof AppCarrerasRoute
   AppHerramientasRoute: typeof AppHerramientasRoute
   AppInfoRoute: typeof AppInfoRoute
@@ -217,6 +237,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppCarrerasRoute: AppCarrerasRoute,
   AppHerramientasRoute: AppHerramientasRoute,
   AppInfoRoute: AppInfoRoute,
