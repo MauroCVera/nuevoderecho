@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate, Link, useLocation } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { signOut, useSession, displayName } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { getSession, signOut } from "@/lib/auth";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -17,21 +17,25 @@ const TABS = [
 function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading } = useSession();
+  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/" });
-  }, [loading, user, navigate]);
+    const s = getSession();
+    if (!s) navigate({ to: "/" });
+    else { setUser(s); setReady(true); }
+  }, [navigate]);
 
-  if (loading || !user) return <div style={{ background: "#0000ff", minHeight: "100vh" }} />;
+  if (!ready) return <div style={{ background: "#0000ff", minHeight: "100vh" }} />;
 
-  async function handleLogout() {
-    await signOut();
+  function handleLogout() {
+    signOut();
     navigate({ to: "/" });
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#1e90ff]">
+      {/* Header */}
       <header className="bg-[#0000ff] text-white px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center">
@@ -39,7 +43,7 @@ function AppLayout() {
           </div>
           <div className="leading-tight">
             <div className="font-display text-lg tracking-wide">NUEVO DERECHO</div>
-            <div className="text-[10px] opacity-80 -mt-0.5">Hola, {displayName(user)}</div>
+            <div className="text-[10px] opacity-80 -mt-0.5">Hola, {user}</div>
           </div>
         </div>
         <button
@@ -50,10 +54,12 @@ function AppLayout() {
         </button>
       </header>
 
+      {/* Content */}
       <main className="flex-1 pb-20">
         <Outlet />
       </main>
 
+      {/* Bottom nav */}
       <nav className="fixed bottom-0 inset-x-0 bg-[#0000ff] border-t border-white/20 grid grid-cols-5 z-50">
         {TABS.map((t) => {
           const active = location.pathname.startsWith(t.to);

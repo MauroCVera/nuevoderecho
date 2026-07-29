@@ -1,80 +1,48 @@
-import { useEffect, useState } from "react";
-import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+// Simple client-side auth using localStorage. Not real security — a gate.
+const USERS_KEY = "nd_users";
+const SESSION_KEY = "nd_session";
 
-export const CARRERAS = ["Abogacía", "Traductorado", "Calígrafo", "Profesorado", "CBC"] as const;
-export type Carrera = (typeof CARRERAS)[number];
+type User = { username: string; password: string };
 
-export async function signUp(
-  email: string,
-  password: string,
-  carrera: Carrera,
-): Promise<{ ok: boolean; error?: string }> {
-  email = email.trim();
-  if (!email || !password) return { ok: false, error: "Completá email y contraseña" };
-  if (!carrera) return { ok: false, error: "Elegí una carrera" };
-  const redirectTo = typeof window !== "undefined" ? window.location.origin : undefined;
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { carrera },
-      emailRedirectTo: redirectTo,
-    },
-  });
-  if (error) return { ok: false, error: error.message };
-  return { ok: true };
-}
-
-export async function signIn(
-  email: string,
-  password: string,
-): Promise<{ ok: boolean; error?: string }> {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email.trim(),
-    password,
-  });
-  if (error) return { ok: false, error: "Email o contraseña incorrectos" };
-  if (data.user) {
-    // Track last sign-in in profiles (best-effort).
-    supabase
-      .from("profiles")
-      .update({ last_sign_in_at: new Date().toISOString() })
-      .eq("user_id", data.user.id)
-      .then(() => undefined);
+function loadUsers(): User[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  } catch {
+    return [];
   }
+}
+
+function saveUsers(users: User[]) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+export function signUp(username: string, password: string): { ok: boolean; error?: string } {
+  username = username.trim();
+  if (!username || !password) return { ok: false, error: "Completá usuario y contraseña" };
+  const users = loadUsers();
+  if (users.some((u) => u.username.toLowerCase() === username.toLowerCase())) {
+    return { ok: false, error: "Ese usuario ya existe" };
+  }
+  users.push({ username, password });
+  saveUsers(users);
+  localStorage.setItem(SESSION_KEY, username);
   return { ok: true };
 }
 
-export async function signOut() {
-  await supabase.auth.signOut();
+export function signIn(username: string, password: string): { ok: boolean; error?: string } {
+  const users = loadUsers();
+  const u = users.find((x) => x.username.toLowerCase() === username.trim().toLowerCase());
+  if (!u || u.password !== password) return { ok: false, error: "Usuario o contraseña incorrectos" };
+  localStorage.setItem(SESSION_KEY, u.username);
+  return { ok: true };
 }
 
-export function useSession() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      setLoading(false);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-      setLoading(false);
-    });
-    return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
-    };
-  }, []);
-
-  return { session, user: session?.user ?? null, loading };
+export function signOut() {
+  localStorage.removeItem(SESSION_KEY);
 }
 
-export function displayName(user: User | null | undefined): string {
-  if (!user) return "Estudiante";
-  return user.email?.split("@")[0] ?? "Estudiante";
+export function getSession(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(SESSION_KEY);
 }
