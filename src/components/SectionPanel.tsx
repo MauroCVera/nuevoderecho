@@ -29,21 +29,12 @@ export function SectionPanel({
 export function MenuButton({
   children,
   onClick,
-  href,
 }: {
   children: ReactNode;
   onClick?: () => void;
-  href?: string;
 }) {
-  if (href) {
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className="menu-btn">
-        {children}
-      </a>
-    );
-  }
   return (
-    <button onClick={onClick} className="menu-btn">
+    <button onClick={onClick} className="menu-btn" type="button">
       {children}
     </button>
   );
