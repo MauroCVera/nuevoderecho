@@ -62,6 +62,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          carrera: string | null
+          created_at: string
+          email: string | null
+          fecha_login: string
+          fecha_logout: string | null
+          id: string
+          user_id: string | null
+          username: string
+        }
+        Insert: {
+          carrera?: string | null
+          created_at?: string
+          email?: string | null
+          fecha_login?: string
+          fecha_logout?: string | null
+          id?: string
+          user_id?: string | null
+          username: string
+        }
+        Update: {
+          carrera?: string | null
+          created_at?: string
+          email?: string | null
+          fecha_login?: string
+          fecha_logout?: string | null
+          id?: string
+          user_id?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
