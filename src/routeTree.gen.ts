@@ -18,6 +18,7 @@ import { Route as AppInstitucionalRouteImport } from './routes/app.institucional
 import { Route as AppInfoRouteImport } from './routes/app.info'
 import { Route as AppHerramientasRouteImport } from './routes/app.herramientas'
 import { Route as AppCarrerasRouteImport } from './routes/app.carreras'
+import { Route as ApiPublicProxyRouteImport } from './routes/api/public/proxy'
 
 const InicioRoute = InicioRouteImport.update({
   id: '/inicio',
@@ -64,6 +65,11 @@ const AppCarrerasRoute = AppCarrerasRouteImport.update({
   path: '/carreras',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicProxyRoute = ApiPublicProxyRouteImport.update({
+  id: '/api/public/proxy',
+  path: '/api/public/proxy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/app/institucional': typeof AppInstitucionalRoute
   '/app/mi-carrera': typeof AppMiCarreraRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/app/institucional': typeof AppInstitucionalRoute
   '/app/mi-carrera': typeof AppMiCarreraRoute
   '/app': typeof AppIndexRoute
+  '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/app/institucional': typeof AppInstitucionalRoute
   '/app/mi-carrera': typeof AppMiCarreraRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/app/institucional'
     | '/app/mi-carrera'
     | '/app/'
+    | '/api/public/proxy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/app/institucional'
     | '/app/mi-carrera'
     | '/app'
+    | '/api/public/proxy'
   id:
     | '__root__'
     | '/'
@@ -131,12 +142,14 @@ export interface FileRouteTypes {
     | '/app/institucional'
     | '/app/mi-carrera'
     | '/app/'
+    | '/api/public/proxy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   InicioRoute: typeof InicioRoute
+  ApiPublicProxyRoute: typeof ApiPublicProxyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCarrerasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/public/proxy': {
+      id: '/api/public/proxy'
+      path: '/api/public/proxy'
+      fullPath: '/api/public/proxy'
+      preLoaderRoute: typeof ApiPublicProxyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -231,6 +251,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   InicioRoute: InicioRoute,
+  ApiPublicProxyRoute: ApiPublicProxyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
