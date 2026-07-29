@@ -1,4 +1,6 @@
 // Simple client-side auth using localStorage. Not real security — a gate.
+import { recordLogin, recordLogout } from "./session-tracking";
+
 const USERS_KEY = "nd_users";
 const SESSION_KEY = "nd_session";
 
@@ -27,6 +29,7 @@ export function signUp(username: string, password: string): { ok: boolean; error
   users.push({ username, password });
   saveUsers(users);
   localStorage.setItem(SESSION_KEY, username);
+  void recordLogin(username);
   return { ok: true };
 }
 
@@ -35,10 +38,12 @@ export function signIn(username: string, password: string): { ok: boolean; error
   const u = users.find((x) => x.username.toLowerCase() === username.trim().toLowerCase());
   if (!u || u.password !== password) return { ok: false, error: "Usuario o contraseña incorrectos" };
   localStorage.setItem(SESSION_KEY, u.username);
+  void recordLogin(u.username);
   return { ok: true };
 }
 
 export function signOut() {
+  void recordLogout();
   localStorage.removeItem(SESSION_KEY);
 }
 
