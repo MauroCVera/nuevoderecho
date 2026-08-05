@@ -47,17 +47,26 @@ function Inicio() {
 
       <div className="flex gap-4 mt-10">
         {[
-          { bg: "#25D366", label: "W" },
-          { bg: "#E1306C", label: "IG" },
-          { bg: "#000000", label: "TT" },
-          { bg: "#1877F2", label: "F" },
-          { bg: "#1DA1F2", label: "X" },
+          { bg: "#25D366", label: "W", name: "WhatsApp", url: "https://wa.me/5491133642037" },
+          { bg: "#E1306C", label: "IG", name: "Instagram", url: "https://www.instagram.com/nuevoderechouba/?hl=es" },
+          { bg: "#000000", label: "TT", name: "TikTok", url: "https://www.tiktok.com/@nuevoderechouba" },
+          { bg: "#1877F2", label: "F", name: "Facebook", url: "https://www.facebook.com/nuevoderechouba" },
+          { bg: "#1DA1F2", label: "X", name: "X / Twitter", url: "https://x.com/NuevoDerechoUBA?lang=es" },
         ].map((s) => (
-          <div key={s.label} className="w-11 h-11 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: s.bg }}>
+          <a
+            key={s.label}
+            href={s.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={s.name}
+            className="w-11 h-11 rounded-full flex items-center justify-center text-white text-xs font-bold transition-transform hover:scale-110"
+            style={{ background: s.bg }}
+          >
             {s.label}
-          </div>
+          </a>
         ))}
       </div>
+
     </div>
   );
 }
