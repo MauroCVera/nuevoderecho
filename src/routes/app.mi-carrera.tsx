@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { getSession, signOut } from "@/lib/auth";
-import { SectionPanel, MenuButton } from "@/components/SectionPanel";
+import { SectionPanel } from "@/components/SectionPanel";
+import { LinkSections, type NDSection } from "@/components/LinkSections";
 
 export const Route = createFileRoute("/app/mi-carrera")({
   component: MiCarrera,
@@ -18,6 +19,31 @@ function MiCarrera() {
   const navigate = useNavigate();
   const user = getSession() ?? "Estudiante";
 
+  const sections: NDSection[] = [
+    {
+      title: "Mi Carrera",
+      links: [
+        {
+          label: "Mis Materias",
+          dummy:
+            "Próximamente vas a poder cargar tus materias e integrarlas con el Plan de Estudios Interactivo Online.",
+        },
+        { label: "Historial Académico", url: "https://3w.derecho.uba.ar" },
+        {
+          label: "Favoritos",
+          dummy: "Función en desarrollo: vas a poder guardar accesos y links favoritos.",
+        },
+        {
+          label: "Cerrar Sesión",
+          onClick: () => {
+            signOut();
+            navigate({ to: "/" });
+          },
+        },
+      ],
+    },
+  ];
+
   return (
     <div>
       <SectionPanel title="Mi Perfil" variant="white">
@@ -32,20 +58,7 @@ function MiCarrera() {
         </div>
       </SectionPanel>
 
-      <SectionPanel title="Mi Carrera">
-        <MenuButton>Mis Materias</MenuButton>
-        <MenuButton>Historial Académico</MenuButton>
-        <MenuButton>Próximos Exámenes</MenuButton>
-        <MenuButton>Favoritos</MenuButton>
-        <MenuButton
-          onClick={() => {
-            signOut();
-            navigate({ to: "/" });
-          }}
-        >
-          Cerrar Sesión
-        </MenuButton>
-      </SectionPanel>
+      <LinkSections sections={sections} />
     </div>
   );
 }
