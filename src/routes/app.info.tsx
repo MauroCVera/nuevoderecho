@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SectionPanel, MenuButton } from "@/components/SectionPanel";
+import { LinkSections, type NDSection } from "@/components/LinkSections";
 
 export const Route = createFileRoute("/app/info")({
   component: Info,
@@ -13,16 +13,21 @@ export const Route = createFileRoute("/app/info")({
   }),
 });
 
+const sections: NDSection[] = [
+  {
+    title: "Info para Estudiantes",
+    links: [
+      { label: "Inscripciones", url: "https://nuevoderechouba.com.ar/index.php/inscripciones/", proxy: true },
+      { label: "Club del Fallo", url: "https://drive.google.com/drive/folders/10Cn9u3TtkazzdM1lzrhZ15z4T4MLL0u1" },
+      { label: "Certificado Alumno Regular", url: "https://www.derecho.uba.ar/tramites/" },
+      { label: "Certificado de Examen", url: "https://docs.google.com/forms/u/0/d/19-CGFBpwcQoeRW5EEdvk1hhJu7V4m_R9mDwdtXsrCf4/viewform?edit_requested=true" },
+      { label: "Centro de Estudiantes", url: "https://nuevoderechouba.com.ar/index.php/centro-de-estudiantes/", proxy: true },
+      { label: "Becas", url: "https://www.derecho.uba.ar/extension/becas/" },
+      { label: "Consejo Directivo", url: "https://nuevoderechouba.com.ar/index.php/consejo-directivo/", proxy: true },
+    ],
+  },
+];
+
 function Info() {
-  return (
-    <SectionPanel title="Info para Estudiantes">
-      <MenuButton>Inscripciones</MenuButton>
-      <MenuButton>Club del Fallo</MenuButton>
-      <MenuButton>Certificado Alumno Regular</MenuButton>
-      <MenuButton>Certificado de Examen</MenuButton>
-      <MenuButton>Centro de Estudiantes</MenuButton>
-      <MenuButton>Becas</MenuButton>
-      <MenuButton>Consejo Directivo</MenuButton>
-    </SectionPanel>
-  );
+  return <LinkSections sections={sections} />;
 }
