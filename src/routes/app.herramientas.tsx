@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SectionPanel, MenuButton } from "@/components/SectionPanel";
+import { LinkSections, type NDSection } from "@/components/LinkSections";
 
 export const Route = createFileRoute("/app/herramientas")({
   component: Herramientas,
@@ -13,15 +13,20 @@ export const Route = createFileRoute("/app/herramientas")({
   }),
 });
 
+const sections: NDSection[] = [
+  {
+    title: "Herramientas Digitales",
+    links: [
+      { label: "Sala de Conectividad", url: "https://nuevoderechouba.com.ar/index.php/sala-de-conectividad/", proxy: true },
+      { label: "OpenAI Chat GPT", url: "https://chatgpt.com/auth/login" },
+      { label: "Audio a Texto", url: "https://maurocvera.github.io/Transcriptor-de-Audios-a-Texto/" },
+      { label: "Lectura a Texto", url: "https://maurocvera.github.io/Lector-de-Texto-Avanzado/" },
+      { label: "Imagen a Texto", url: "https://maurocvera.github.io/Interpretador-de-Texto/" },
+      { label: "Asistente Académico ND", url: "https://gemini.google.com/gem/74ff34099801?usp=sharing" },
+    ],
+  },
+];
+
 function Herramientas() {
-  return (
-    <SectionPanel title="Herramientas Digitales">
-      <MenuButton>Sala de Conectividad</MenuButton>
-      <MenuButton>OpenAI Chat GPT</MenuButton>
-      <MenuButton>Audio a Texto</MenuButton>
-      <MenuButton>Lectura a Texto</MenuButton>
-      <MenuButton>Imagen a Texto</MenuButton>
-      <MenuButton>Asistente Académico ND</MenuButton>
-    </SectionPanel>
-  );
+  return <LinkSections sections={sections} />;
 }

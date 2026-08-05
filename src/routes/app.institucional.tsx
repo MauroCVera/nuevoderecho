@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SectionPanel, MenuButton } from "@/components/SectionPanel";
+import { LinkSections, type NDSection } from "@/components/LinkSections";
 
 export const Route = createFileRoute("/app/institucional")({
   component: Institucional,
@@ -13,15 +13,23 @@ export const Route = createFileRoute("/app/institucional")({
   }),
 });
 
+const sections: NDSection[] = [
+  {
+    title: "Institucional",
+    links: [
+      {
+        label: "Herramienta de Readmisión",
+        dummy: "Herramienta en desarrollo. Estará disponible próximamente.",
+      },
+      { label: "Campus Virtual", url: "https://www.derecho.uba.ar/campusvirtual/" },
+      { label: "SIU-Guaraní Derecho", url: "https://3w.derecho.uba.ar" },
+      { label: "Calendario Académico", url: "https://www.derecho.uba.ar/academica/calendario_academico.php" },
+      { label: "Correo Académico", url: "https://www.derecho.uba.ar/correoacademico/acceso-correo-electronico-academico.php" },
+      { label: "Trámites a Distancia UBA", url: "https://www.tramitesadistancia.uba.ar" },
+    ],
+  },
+];
+
 function Institucional() {
-  return (
-    <SectionPanel title="Institucional">
-      <MenuButton>Centro de Consultas Personal</MenuButton>
-      <MenuButton>Campus Virtual</MenuButton>
-      <MenuButton>SIU-Guaraní Derecho</MenuButton>
-      <MenuButton>Calendario Académico</MenuButton>
-      <MenuButton>Correo Académico</MenuButton>
-      <MenuButton>Trámites a Distancia UBA</MenuButton>
-    </SectionPanel>
-  );
+  return <LinkSections sections={sections} />;
 }
