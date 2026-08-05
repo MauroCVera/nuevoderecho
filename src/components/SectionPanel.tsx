@@ -29,12 +29,26 @@ export function SectionPanel({
 export function MenuButton({
   children,
   onClick,
+  dummy = false,
 }: {
   children: ReactNode;
   onClick?: () => void;
+  dummy?: boolean;
 }) {
   return (
-    <button onClick={onClick} className="menu-btn" type="button">
+    <button
+      onClick={onClick}
+      className="menu-btn"
+      type="button"
+      style={
+        dummy
+          ? {
+              background: "linear-gradient(180deg,#d4d4d4 0%,#9a9a9a 55%,#7a7a7a 100%)",
+              color: "#f5f5f5",
+            }
+          : undefined
+      }
+    >
       {children}
     </button>
   );
