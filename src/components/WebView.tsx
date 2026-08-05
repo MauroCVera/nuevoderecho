@@ -30,6 +30,15 @@ export function WebView({ url, title, onClose, useProxy = false }: WebViewProps)
           ←
         </button>
         <div className="flex-1 truncate font-display text-lg tracking-wide">{title}</div>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir en el navegador"
+          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 flex items-center justify-center text-lg leading-none"
+        >
+          ↗
+        </a>
         <button
           onClick={onClose}
           aria-label="Cerrar"
