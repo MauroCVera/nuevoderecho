@@ -18,11 +18,26 @@ const sections: NDSection[] = [
     title: "Herramientas Digitales",
     links: [
       { label: "Sala de Conectividad", url: "https://nuevoderechouba.com.ar/index.php/sala-de-conectividad/", proxy: true },
-      { label: "OpenAI Chat GPT", url: "https://chatgpt.com/auth/login" },
+      { label: "OpenAI Chat GPT", url: "https://chatgpt.com/auth/login", external: true },
       { label: "Audio a Texto", url: "https://maurocvera.github.io/Transcriptor-de-Audios-a-Texto/" },
       { label: "Lectura a Texto", url: "https://maurocvera.github.io/Lector-de-Texto-Avanzado/" },
       { label: "Imagen a Texto", url: "https://maurocvera.github.io/Interpretador-de-Texto/" },
-      { label: "Asistente Académico ND", url: "https://gemini.google.com/gem/74ff34099801?usp=sharing" },
+      {
+        label: "Asistente Académico ND",
+        choicesDescription: "Elegí cómo querés usar el asistente.",
+        choices: [
+          {
+            label: "Abrir Gemini AI para usar IA potenciada por Google",
+            url: "https://gemini.google.com/gem/74ff34099801?usp=sharing",
+            external: true,
+          },
+          {
+            label: "Abrir Web AI ligero, para Android 7 o menor",
+            url: "https://nuevoderechouba.com.ar/index.php/asistente-academico-nd/",
+            proxy: true,
+          },
+        ],
+      },
     ],
   },
 ];
