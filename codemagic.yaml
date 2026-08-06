@@ -1,0 +1,24 @@
+workflows:
+  compilacion-android-basica:
+    name: Generación de APK Android (Debug)
+    instance_type: mac_mini_m1
+    
+    # 1. Definición del entorno virtual
+    environment:
+      java: 17 # Versión de Java necesaria para las herramientas de Android modernas
+      
+    # 2. Secuencia de comandos a ejecutar en la máquina virtual
+    scripts:
+      - name: Otorgar permisos de ejecución a Gradle
+        script: |
+          cd android # Cambiar al directorio de Android (ajusta esta ruta si es diferente en tu repo)
+          chmod +x gradlew
+          
+      - name: Compilar el APK de Android
+        script: |
+          cd android
+          ./gradlew assembleDebug
+          
+    # 3. Definición de los artefactos (Lo que quieres descargar al final)
+    artifacts:
+      - android/app/build/outputs/apk/**/*.apk
