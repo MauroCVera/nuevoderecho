@@ -12,6 +12,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -67,6 +69,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "2.8.5",
     "@types/node": "^22.16.5",
@@ -84,5 +87,19 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.16"
-  }
+  },
+  "version": "1.0.0",
+  "description": "Ayudame a crear una a aplicacion para Android/Celular que pueda seguir el patron de diseño de las imagenes compartidas, con un panel de bienvenida que al iniciar pida una contraseña y usuario, el cual se podrà crear desde el mismo panel; el panel debe tener la palabra \"Bienvenido/a a Facultad de Derecho\" con la Fuente Bebas Neue en letras blancas y el fondo un color azul francia #0000ff. Despues el sistema debe llevar al usuario a la pantalla de inicio (en caso que el usuario ya hubiera abierto sesion previamente, pasa directamente a la pantalla de inicio) esta pantalla debe ser como las dos primeras imagenes adjuntas con un boton animado que diga \"Entrar\" en letras Bebas Neue con color blanco. El menu principal deberia respetar las imagenes, y cada seccion marcada en las imagenes de muestra, formar una nueva pestaña en la parte inferior de la pantalla en secciones/botones \"Carreras\" \"Institucional\" \"Info\" \"Herr. Digitales\" \"Mi Carrera\"",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MauroCVera/nuevoderecho.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MauroCVera/nuevoderecho/issues"
+  },
+  "homepage": "https://github.com/MauroCVera/nuevoderecho#readme"
 }
