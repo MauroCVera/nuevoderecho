@@ -138,11 +138,8 @@ export const Route = createFileRoute("/api/public/proxy")({
           } else {
             html = `${injection}${html}`;
           }
-          // Belt-and-suspenders: strip nav chrome on load and keep watching for
-          // menus injected later by the site's own JS (Elementor, sticky headers).
-          const script = `
-<script>
           // Server-side: physically remove <header> blocks so they never render.
+
           html = html.replace(/<header\b[\s\S]*?<\/header>/gi, "");
           html = html.replace(
             /<div\b[^>]*data-elementor-type=["']header["'][\s\S]*?<\/div>/gi,
