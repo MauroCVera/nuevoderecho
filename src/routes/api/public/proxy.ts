@@ -142,13 +142,30 @@ export const Route = createFileRoute("/api/public/proxy")({
           // menus injected later by the site's own JS (Elementor, sticky headers).
           const script = `
 <script>
+          // Server-side: physically remove <header> blocks so they never render.
+          html = html.replace(/<header\b[\s\S]*?<\/header>/gi, "");
+          html = html.replace(
+            /<div\b[^>]*data-elementor-type=["']header["'][\s\S]*?<\/div>/gi,
+            "",
+          );
+
+          // Belt-and-suspenders: strip nav chrome on load and keep watching for
+          // menus injected later by the site's own JS (Elementor, sticky headers).
+          const script = `
+<script>
 (function(){
   var SELS = ${JSON.stringify(HIDE_SELECTORS.join(","))};
   function strip(root){
     try {
-      (root || document).querySelectorAll(SELS).forEach(function(el){
-        el.style.setProperty('display','none','important');
-        el.setAttribute('aria-hidden','true');
+      (root || document).querySelectorAll(SELS).forEach(function(el){ el.remove(); });
+      // remove fixed/sticky bars pinned to the top of the viewport
+      Array.prototype.forEach.call(document.body ? document.body.children : [], function(el){
+        try {
+          var cs = getComputedStyle(el);
+          if ((cs.position === 'fixed' || cs.position === 'sticky') && parseInt(cs.top || '0', 10) <= 0) {
+            el.style.setProperty('display','none','important');
+          }
+        } catch (e) {}
       });
     } catch (e) {}
   }
@@ -160,6 +177,8 @@ export const Route = createFileRoute("/api/public/proxy")({
       .observe(document.documentElement, { childList: true, subtree: true });
   }
 })();
+</script>`;
+
 </script>`;
 
           if (/<\/body>/i.test(html)) {
