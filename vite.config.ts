@@ -7,9 +7,12 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Static SPA build: no Nitro, no Cloudflare/Wrangler server bundle.
+  nitro: false,
   tanstackStart: {
+    // Client-side rendering only; the shell is prerendered to a static index.html.
+    spa: { enabled: true },
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
   },
 });
