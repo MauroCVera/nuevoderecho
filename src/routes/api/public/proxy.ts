@@ -102,7 +102,7 @@ export const Route = createFileRoute("/api/public/proxy")({
             redirect: "follow",
           });
         } catch (e) {
-          return new Response("Upstream fetch failed", { status: 502 });
+          return new Response("Upstream fetch failed: " + (e instanceof Error ? e.message : String(e)), { status: 502 });
         }
 
         const contentType = upstream.headers.get("content-type") || "";
