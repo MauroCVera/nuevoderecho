@@ -46,7 +46,23 @@ const HIDE_SELECTORS = [
   "#site-navigation",
   "#main-nav",
   "#wpadminbar",
+  // extra header variants
+  ".page-header",
+  ".entry-header",
+  ".hero-header",
+  ".header-wrapper",
+  ".header-container",
+  ".header-inner",
+  ".site-header-wrapper",
+  ".ehf-header",
+  "#header",
+  "#site-header",
+  "#page-header",
+  '[class*="header"][class*="sticky"]',
+  '[data-elementor-type="header"]',
+  ".elementor-location-header .elementor-section",
 ];
+
 
 // CSS injected into HTML pages to hide the site's own header/nav/footer
 const HIDE_CSS = `
@@ -122,6 +138,14 @@ export const Route = createFileRoute("/api/public/proxy")({
           } else {
             html = `${injection}${html}`;
           }
+          // Server-side: physically remove <header> blocks so they never render.
+
+          html = html.replace(/<header\b[\s\S]*?<\/header>/gi, "");
+          html = html.replace(
+            /<div\b[^>]*data-elementor-type=["']header["'][\s\S]*?<\/div>/gi,
+            "",
+          );
+
           // Belt-and-suspenders: strip nav chrome on load and keep watching for
           // menus injected later by the site's own JS (Elementor, sticky headers).
           const script = `
@@ -130,9 +154,15 @@ export const Route = createFileRoute("/api/public/proxy")({
   var SELS = ${JSON.stringify(HIDE_SELECTORS.join(","))};
   function strip(root){
     try {
-      (root || document).querySelectorAll(SELS).forEach(function(el){
-        el.style.setProperty('display','none','important');
-        el.setAttribute('aria-hidden','true');
+      (root || document).querySelectorAll(SELS).forEach(function(el){ el.remove(); });
+      // remove fixed/sticky bars pinned to the top of the viewport
+      Array.prototype.forEach.call(document.body ? document.body.children : [], function(el){
+        try {
+          var cs = getComputedStyle(el);
+          if ((cs.position === 'fixed' || cs.position === 'sticky') && parseInt(cs.top || '0', 10) <= 0) {
+            el.style.setProperty('display','none','important');
+          }
+        } catch (e) {}
       });
     } catch (e) {}
   }
