@@ -6,17 +6,59 @@ const ALLOWED_HOSTS = new Set([
   "www.nuevoderechouba.com.ar",
 ]);
 
+// Selectors for the external site's own navigation chrome (header / nav menu / footer).
+// Elementor builds menus as widgets (no <nav> tag), hence the widget-level selectors.
+const HIDE_SELECTORS = [
+  "header",
+  "nav",
+  "footer",
+  '[role="navigation"]',
+  '[role="banner"]',
+  ".site-header",
+  ".site-footer",
+  "#masthead",
+  "#colophon",
+  ".main-navigation",
+  ".primary-navigation",
+  ".site-navigation",
+  ".top-bar",
+  ".topbar",
+  ".header",
+  ".header-main",
+  ".site-branding",
+  ".menu-toggle",
+  ".mobile-menu",
+  ".elementor-location-header",
+  ".elementor-location-footer",
+  ".elementor-widget-nav-menu",
+  ".elementor-nav-menu",
+  ".elementor-nav-menu__container",
+  ".elementor-nav-menu--main",
+  ".elementor-nav-menu--dropdown",
+  ".elementor-menu-toggle",
+  ".elementor-sticky",
+  ".elementor-widget-wp-widget-nav_menu",
+  'ul[id^="menu-"]',
+  'div[id^="menu-"]',
+  ".menu-main-container",
+  ".nav-menu",
+  ".navbar",
+  "#site-navigation",
+  "#main-nav",
+  "#wpadminbar",
+];
+
 // CSS injected into HTML pages to hide the site's own header/nav/footer
 const HIDE_CSS = `
 <style id="nd-hide-chrome">
-  header, nav, footer,
-  .site-header, .site-footer,
-  #masthead, #colophon,
-  .main-navigation, .primary-navigation, .top-bar, .topbar,
-  .header, .header-main, .site-branding,
-  .elementor-location-header, .elementor-location-footer,
-  .menu-toggle, .mobile-menu, .site-navigation,
-  #wpadminbar { display: none !important; visibility: hidden !important; height: 0 !important; }
+  ${HIDE_SELECTORS.join(",\n  ")} {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
   body { padding-top: 0 !important; margin-top: 0 !important; }
   html, body { overflow-x: hidden !important; }
   main, article, .site-main, .content-area, #content, .entry-content {
@@ -25,6 +67,8 @@ const HIDE_CSS = `
   img, video, iframe { max-width: 100% !important; height: auto !important; }
 </style>
 `;
+
+
 
 export const Route = createFileRoute("/api/public/proxy")({
   server: {
@@ -78,14 +122,30 @@ export const Route = createFileRoute("/api/public/proxy")({
           } else {
             html = `${injection}${html}`;
           }
-          // Also inject a DOMContentLoaded script as belt-and-suspenders
+          // Belt-and-suspenders: strip nav chrome on load and keep watching for
+          // menus injected later by the site's own JS (Elementor, sticky headers).
           const script = `
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var sels = ['header','nav','footer','.site-header','.site-footer','#masthead','#colophon','.main-navigation','.primary-navigation','.top-bar','.header','.elementor-location-header','.elementor-location-footer','.menu-toggle','.mobile-menu'];
-  sels.forEach(function(s){ document.querySelectorAll(s).forEach(function(el){ el.style.setProperty('display','none','important'); }); });
-});
+(function(){
+  var SELS = ${JSON.stringify(HIDE_SELECTORS.join(","))};
+  function strip(root){
+    try {
+      (root || document).querySelectorAll(SELS).forEach(function(el){
+        el.style.setProperty('display','none','important');
+        el.setAttribute('aria-hidden','true');
+      });
+    } catch (e) {}
+  }
+  strip(document);
+  document.addEventListener('DOMContentLoaded', function(){ strip(document); });
+  window.addEventListener('load', function(){ strip(document); });
+  if (window.MutationObserver) {
+    new MutationObserver(function(){ strip(document); })
+      .observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();
 </script>`;
+
           if (/<\/body>/i.test(html)) {
             html = html.replace(/<\/body>/i, `${script}</body>`);
           } else {
