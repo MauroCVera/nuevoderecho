@@ -46,7 +46,23 @@ const HIDE_SELECTORS = [
   "#site-navigation",
   "#main-nav",
   "#wpadminbar",
+  // extra header variants
+  ".page-header",
+  ".entry-header",
+  ".hero-header",
+  ".header-wrapper",
+  ".header-container",
+  ".header-inner",
+  ".site-header-wrapper",
+  ".ehf-header",
+  "#header",
+  "#site-header",
+  "#page-header",
+  '[class*="header"][class*="sticky"]',
+  '[data-elementor-type="header"]',
+  ".elementor-location-header .elementor-section",
 ];
+
 
 // CSS injected into HTML pages to hide the site's own header/nav/footer
 const HIDE_CSS = `
