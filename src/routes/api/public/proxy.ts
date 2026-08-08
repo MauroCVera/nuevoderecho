@@ -176,8 +176,6 @@ export const Route = createFileRoute("/api/public/proxy")({
 })();
 </script>`;
 
-</script>`;
-
           if (/<\/body>/i.test(html)) {
             html = html.replace(/<\/body>/i, `${script}</body>`);
           } else {
