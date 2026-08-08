@@ -122,14 +122,30 @@ export const Route = createFileRoute("/api/public/proxy")({
           } else {
             html = `${injection}${html}`;
           }
-          // Also inject a DOMContentLoaded script as belt-and-suspenders
+          // Belt-and-suspenders: strip nav chrome on load and keep watching for
+          // menus injected later by the site's own JS (Elementor, sticky headers).
           const script = `
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var sels = ['header','nav','footer','.site-header','.site-footer','#masthead','#colophon','.main-navigation','.primary-navigation','.top-bar','.header','.elementor-location-header','.elementor-location-footer','.menu-toggle','.mobile-menu'];
-  sels.forEach(function(s){ document.querySelectorAll(s).forEach(function(el){ el.style.setProperty('display','none','important'); }); });
-});
+(function(){
+  var SELS = ${JSON.stringify(HIDE_SELECTORS.join(","))};
+  function strip(root){
+    try {
+      (root || document).querySelectorAll(SELS).forEach(function(el){
+        el.style.setProperty('display','none','important');
+        el.setAttribute('aria-hidden','true');
+      });
+    } catch (e) {}
+  }
+  strip(document);
+  document.addEventListener('DOMContentLoaded', function(){ strip(document); });
+  window.addEventListener('load', function(){ strip(document); });
+  if (window.MutationObserver) {
+    new MutationObserver(function(){ strip(document); })
+      .observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();
 </script>`;
+
           if (/<\/body>/i.test(html)) {
             html = html.replace(/<\/body>/i, `${script}</body>`);
           } else {
